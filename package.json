@@ -1,0 +1,26 @@
+{
+  "name": "kabelwerkstatt",
+  "version": "1.0.0",
+  "description": "KabelWerkstatt is an original orange-themed wire harness design tool by Amir Mobasheraghdam.",
+  "private": false,
+  "type": "module",
+  "author": "Amir Mobasheraghdam",
+  "license": "MIT",
+  "scripts": {
+    "start": "node tools/dev-server.js",
+    "build": "node tools/build.js",
+    "test": "node tests/run-tests.js",
+    "clean": "node tools/build.js --clean"
+  },
+  "keywords": [
+    "wire-harness",
+    "wiring",
+    "automotive",
+    "kabelbaum",
+    "svg",
+    "design-tool"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

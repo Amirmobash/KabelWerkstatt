@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f97316" />
+    <meta name="author" content="Amir Mobasheraghdam" />
+    <title>KabelWerkstatt — Wire Harness Design Tool</title>
+    <link rel="icon" href="src/assets/logo.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <img src="src/assets/logo.svg" alt="KabelWerkstatt logo" />
+        <div>
+          <h1>KabelWerkstatt</h1>
+          <p>Orange Kabelbaum-Designer · Amir Mobasheraghdam</p>
+        </div>
+      </div>
+      <nav class="header-actions" aria-label="Projektaktionen">
+        <button id="newProjectButton" type="button">Neu</button>
+        <button id="loadDemoButton" type="button">Demo</button>
+        <button id="exportJsonButton" type="button">JSON Export</button>
+        <button id="importJsonButton" type="button">JSON Import</button>
+        <button id="exportSvgButton" type="button">SVG Export</button>
+        <input id="importFileInput" type="file" accept="application/json,.json,.kwd.json" hidden />
+      </nav>
+    </header>
+
+    <main class="app-shell">
+      <aside class="panel toolbox" aria-label="Werkzeuge">
+        <section>
+          <h2>Bauteile</h2>
+          <div class="tool-grid">
+            <button data-add-type="ecu" type="button">ECU</button>
+            <button data-add-type="connector" type="button">Stecker</button>
+            <button data-add-type="sensor" type="button">Sensor</button>
+            <button data-add-type="fuse" type="button">Sicherung</button>
+            <button data-add-type="splice" type="button">Spleiß</button>
+            <button data-add-type="ground" type="button">Masse</button>
+          </div>
+        </section>
+
+        <section>
+          <h2>Verdrahtung</h2>
+          <button id="wireModeButton" class="wide" type="button">Drahtmodus starten</button>
+          <p id="wireModeHint" class="hint">Wähle zwei Bauteile, um einen Draht zu erstellen.</p>
+        </section>
+
+        <section>
+          <h2>Projekt</h2>
+          <label>
+            Name
+            <input id="projectNameInput" type="text" />
+          </label>
+          <label>
+            Fahrzeug
+            <input id="vehicleInput" type="text" />
+          </label>
+          <label>
+            Revision
+            <input id="revisionInput" type="text" />
+          </label>
+          <label>
+            Autor
+            <input id="authorInput" type="text" />
+          </label>
+        </section>
+      </aside>
+
+      <section class="workspace-card" aria-label="Arbeitsfläche">
+        <div class="workspace-toolbar">
+          <strong id="projectTitle">Neuer Kabelsatz</strong>
+          <span id="statusText">Bereit</span>
+        </div>
+        <svg id="workspace" class="workspace" viewBox="0 0 1280 760" role="img" aria-label="Kabelbaum Arbeitsfläche">
+          <defs>
+            <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(120, 53, 15, 0.12)" stroke-width="1" />
+            </pattern>
+            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+              <rect width="100" height="100" fill="url(#smallGrid)" />
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(120, 53, 15, 0.22)" stroke-width="1.5" />
+            </pattern>
+            <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7c2d12" flood-opacity="0.18" />
+            </filter>
+          </defs>
+          <rect width="1280" height="760" fill="url(#grid)" />
+          <g id="wireLayer"></g>
+          <g id="componentLayer"></g>
+        </svg>
+      </section>
+
+      <aside class="panel inspector" aria-label="Inspektor">
+        <section>
+          <h2>Inspektor</h2>
+          <div id="inspectorContent" class="empty-state">Wähle ein Bauteil oder einen Draht.</div>
+        </section>
+        <section>
+          <h2>Stückliste</h2>
+          <div id="bomContent" class="table-wrap"></div>
+        </section>
+        <section>
+          <h2>Prüfung</h2>
+          <div id="validationContent" class="validation-list"></div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <span>© 2026 Amir Mobasheraghdam</span>
+      <span>KabelWerkstatt · Original Project · v1.0.0</span>
+    </footer>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

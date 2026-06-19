@@ -1,0 +1,16 @@
+{
+  "name": "KabelWerkstatt",
+  "short_name": "KabelWerkstatt",
+  "description": "Original orange wire harness design tool by Amir Mobasheraghdam.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff7ed",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "src/assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

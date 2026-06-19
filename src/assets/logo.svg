@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="KabelWerkstatt logo">
+  <defs>
+    <linearGradient id="g" x1="18" y1="14" x2="110" y2="114" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="108" height="108" rx="28" fill="#fff7ed" stroke="#c2410c" stroke-width="6"/>
+  <path d="M31 83c23 0 22-38 45-38h21" fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M31 45h22c17 0 18 38 44 38" fill="none" stroke="#1f160f" stroke-width="8" stroke-linecap="round" opacity=".85"/>
+  <circle cx="31" cy="83" r="10" fill="#f97316"/>
+  <circle cx="31" cy="45" r="10" fill="#f97316"/>
+  <circle cx="97" cy="45" r="10" fill="#f97316"/>
+  <circle cx="97" cy="83" r="10" fill="#f97316"/>
+  <path d="M48 104h32" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/>
+</svg>

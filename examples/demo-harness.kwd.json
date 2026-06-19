@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "appName": "KabelWerkstatt",
+  "meta": {
+    "name": "Demo Kabelbaum Orange-Drive",
+    "vehicle": "EV Plattform DE-01",
+    "revision": "A.1",
+    "author": "Amir Mobasheraghdam",
+    "createdAt": "2026-06-19T00:00:00.000Z",
+    "updatedAt": "2026-06-19T00:00:00.000Z"
+  },
+  "components": [
+    {
+      "id": "demo-ecu-1",
+      "type": "ecu",
+      "label": "Zentral ECU",
+      "x": 110,
+      "y": 300,
+      "pins": 24,
+      "partNumber": "KW-ECU-240",
+      "notes": "Demo main controller"
+    },
+    {
+      "id": "demo-fuse-1",
+      "type": "fuse",
+      "label": "Sicherung F1",
+      "x": 360,
+      "y": 150,
+      "pins": 2,
+      "partNumber": "KW-FUSE-02",
+      "notes": "Power branch protection"
+    },
+    {
+      "id": "demo-connector-x1",
+      "type": "connector",
+      "label": "Stecker X1",
+      "x": 620,
+      "y": 300,
+      "pins": 12,
+      "partNumber": "KW-X12-OR",
+      "notes": "Orange sealed connector"
+    },
+    {
+      "id": "demo-sensor-1",
+      "type": "sensor",
+      "label": "Temp Sensor",
+      "x": 920,
+      "y": 160,
+      "pins": 4,
+      "partNumber": "KW-SENS-T",
+      "notes": "Temperature sensor"
+    },
+    {
+      "id": "demo-ground-1",
+      "type": "ground",
+      "label": "Massepunkt G1",
+      "x": 920,
+      "y": 470,
+      "pins": 1,
+      "partNumber": "",
+      "notes": "Chassis ground"
+    },
+    {
+      "id": "demo-splice-1",
+      "type": "splice",
+      "label": "Spleiß S1",
+      "x": 450,
+      "y": 480,
+      "pins": 4,
+      "partNumber": "",
+      "notes": "Signal split"
+    }
+  ],
+  "wires": [
+    {
+      "id": "demo-wire-1",
+      "label": "W-001",
+      "from": { "componentId": "demo-ecu-1", "pin": 1 },
+      "to": { "componentId": "demo-fuse-1", "pin": 1 },
+      "gauge": "1.50",
+      "color": "RD",
+      "lengthMm": 1234,
+      "partNumber": "",
+      "notes": "Power feed"
+    },
+    {
+      "id": "demo-wire-2",
+      "label": "W-002",
+      "from": { "componentId": "demo-fuse-1", "pin": 2 },
+      "to": { "componentId": "demo-connector-x1", "pin": 1 },
+      "gauge": "1.50",
+      "color": "OG",
+      "lengthMm": 1502,
+      "partNumber": "",
+      "notes": "Protected power"
+    },
+    {
+      "id": "demo-wire-3",
+      "label": "W-003",
+      "from": { "componentId": "demo-connector-x1", "pin": 2 },
+      "to": { "componentId": "demo-sensor-1", "pin": 1 },
+      "gauge": "0.50",
+      "color": "BU",
+      "lengthMm": 1450,
+      "partNumber": "",
+      "notes": "Sensor signal"
+    },
+    {
+      "id": "demo-wire-4",
+      "label": "W-004",
+      "from": { "componentId": "demo-connector-x1", "pin": 3 },
+      "to": { "componentId": "demo-ground-1", "pin": 1 },
+      "gauge": "0.75",
+      "color": "BK",
+      "lengthMm": 1390,
+      "partNumber": "",
+      "notes": "Ground return"
+    }
+  ]
+}
