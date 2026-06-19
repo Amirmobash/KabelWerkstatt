@@ -59,7 +59,7 @@ git init
 git add .
 git commit -m "Initial release of KabelWerkstatt"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/kabelwerkstatt.git
+git remote add origin https://github.com/Amirmobash/kabelwerkstatt.git
 git push -u origin main
 ```
 
