@@ -24,7 +24,7 @@ for (const entry of ['src', 'examples', 'arduino']) {
 
 await writeFile(join(dist, 'build-info.json'), JSON.stringify({
   app: 'KabelWerkstatt',
-  author: 'Amir Mobasheraghdam',
+  author: 'Amir Mobahseraghdam',
   version: '1.1.0',
   builtAt: new Date().toISOString(),
   note: 'Statischer Build ohne externe Abhängigkeiten.'
