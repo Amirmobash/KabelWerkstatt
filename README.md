@@ -68,7 +68,7 @@ KabelWerkstatt speichert Projekte als JSON-Datei mit der Endung `.kwd.json`.
     "name": "Demo Kabelbaum Orange-Drive",
     "vehicle": "EV Plattform DE-01",
     "revision": "A.1",
-    "author": "Amir Mobasheraghdam"
+    "author": "Amir Mobahseraghdam"
   },
   "components": [],
   "wires": []
@@ -113,4 +113,4 @@ KabelWerkstatt/
 
 ## Lizenz
 
-MIT License © 2026 Amir Mobasheraghdam
+MIT License © 2026 Amir Mobahseraghdam

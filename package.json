@@ -4,7 +4,7 @@
   "description": "KabelWerkstatt ist ein schlankes Werkzeug zum Zeichnen, Prüfen und Exportieren von Kabelbaum-Entwürfen.",
   "private": false,
   "type": "module",
-  "author": "Amir Mobasheraghdam",
+  "author": "Amir Mobahseraghdam",
   "license": "MIT",
   "scripts": {
     "start": "node tools/dev-server.js",
