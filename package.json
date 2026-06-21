@@ -1,7 +1,7 @@
 {
   "name": "kabelwerkstatt",
-  "version": "1.0.0",
-  "description": "KabelWerkstatt is an original orange-themed wire harness design tool by Amir Mobasheraghdam.",
+  "version": "1.1.0",
+  "description": "KabelWerkstatt ist ein schlankes Werkzeug zum Zeichnen, Prüfen und Exportieren von Kabelbaum-Entwürfen.",
   "private": false,
   "type": "module",
   "author": "Amir Mobasheraghdam",
@@ -17,6 +17,7 @@
     "wiring",
     "automotive",
     "kabelbaum",
+    "kabeltester",
     "svg",
     "design-tool"
   ],

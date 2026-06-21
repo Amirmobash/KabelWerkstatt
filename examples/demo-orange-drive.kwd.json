@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 2,
+  "appName": "KabelWerkstatt",
+  "meta": {
+    "name": "Demo Kabelbaum Orange-Drive",
+    "vehicle": "EV Plattform DE-01",
+    "revision": "A.1",
+    "author": "Amir Mobasheraghdam",
+    "createdAt": "2026-06-21T12:44:27.505Z",
+    "updatedAt": "2026-06-21T12:44:27.510Z"
+  },
+  "components": [
+    {
+      "id": "ecu-s3jlh-boowx0b",
+      "type": "ecu",
+      "label": "Zentral-ECU",
+      "x": 110,
+      "y": 300,
+      "pins": 24,
+      "partNumber": "KW-ECU-240",
+      "notes": ""
+    },
+    {
+      "id": "fuse-s3jlh-z6yz4ey",
+      "type": "fuse",
+      "label": "Sicherung F1",
+      "x": 360,
+      "y": 150,
+      "pins": 2,
+      "partNumber": "KW-FUSE-02",
+      "notes": ""
+    },
+    {
+      "id": "connector-s3jlh-xykhj6i",
+      "type": "connector",
+      "label": "Stecker X1",
+      "x": 620,
+      "y": 300,
+      "pins": 12,
+      "partNumber": "KW-X12-OR",
+      "notes": ""
+    },
+    {
+      "id": "sensor-s3jlh-5hh3aek",
+      "type": "sensor",
+      "label": "Temperatursensor",
+      "x": 920,
+      "y": 160,
+      "pins": 4,
+      "partNumber": "KW-SENS-T",
+      "notes": ""
+    },
+    {
+      "id": "ground-s3jlh-j0zycfs",
+      "type": "ground",
+      "label": "Massepunkt G1",
+      "x": 920,
+      "y": 470,
+      "pins": 1,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "splice-s3jlh-nk0rs6w",
+      "type": "splice",
+      "label": "Spleiß S1",
+      "x": 450,
+      "y": 480,
+      "pins": 4,
+      "partNumber": "",
+      "notes": ""
+    }
+  ],
+  "wires": [
+    {
+      "id": "wire-s3jlh-fxd0yo2",
+      "label": "W-001",
+      "from": {
+        "componentId": "ecu-s3jlh-boowx0b",
+        "pin": 1
+      },
+      "to": {
+        "componentId": "fuse-s3jlh-z6yz4ey",
+        "pin": 1
+      },
+      "gauge": "1.50",
+      "color": "RD",
+      "lengthMm": 1267,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "wire-s3jli-02j1gps",
+      "label": "W-002",
+      "from": {
+        "componentId": "fuse-s3jlh-z6yz4ey",
+        "pin": 2
+      },
+      "to": {
+        "componentId": "connector-s3jlh-xykhj6i",
+        "pin": 1
+      },
+      "gauge": "1.50",
+      "color": "OG",
+      "lengthMm": 1397,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "wire-s3jli-kwm3wa8",
+      "label": "W-003",
+      "from": {
+        "componentId": "connector-s3jlh-xykhj6i",
+        "pin": 2
+      },
+      "to": {
+        "componentId": "sensor-s3jlh-5hh3aek",
+        "pin": 1
+      },
+      "gauge": "0.50",
+      "color": "BU",
+      "lengthMm": 1463,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "wire-s3jli-hdast08",
+      "label": "W-004",
+      "from": {
+        "componentId": "connector-s3jlh-xykhj6i",
+        "pin": 3
+      },
+      "to": {
+        "componentId": "ground-s3jlh-j0zycfs",
+        "pin": 1
+      },
+      "gauge": "0.75",
+      "color": "BK",
+      "lengthMm": 1473,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "wire-s3jli-r0djsc1",
+      "label": "W-005",
+      "from": {
+        "componentId": "ecu-s3jlh-boowx0b",
+        "pin": 8
+      },
+      "to": {
+        "componentId": "splice-s3jlh-nk0rs6w",
+        "pin": 1
+      },
+      "gauge": "0.75",
+      "color": "GN",
+      "lengthMm": 1627,
+      "partNumber": "",
+      "notes": ""
+    },
+    {
+      "id": "wire-s3jli-glqyb1m",
+      "label": "W-006",
+      "from": {
+        "componentId": "splice-s3jlh-nk0rs6w",
+        "pin": 2
+      },
+      "to": {
+        "componentId": "ground-s3jlh-j0zycfs",
+        "pin": 1
+      },
+      "gauge": "0.75",
+      "color": "BN",
+      "lengthMm": 2102,
+      "partNumber": "",
+      "notes": ""
+    }
+  ]
+}

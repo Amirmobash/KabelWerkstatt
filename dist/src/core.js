@@ -1,28 +1,28 @@
 export const APP_NAME = 'KabelWerkstatt';
 export const AUTHOR = 'Amir Mobasheraghdam';
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 export const PIXEL_TO_MM = 4;
 
 export const COMPONENT_TYPES = {
-  ecu: { label: 'ECU', defaultPins: 24, width: 150, height: 76, badge: 'ECU' },
-  connector: { label: 'Stecker', defaultPins: 12, width: 140, height: 70, badge: 'ST' },
-  sensor: { label: 'Sensor', defaultPins: 4, width: 128, height: 64, badge: 'SE' },
-  fuse: { label: 'Sicherung', defaultPins: 2, width: 122, height: 60, badge: 'SI' },
-  splice: { label: 'Spleiß', defaultPins: 4, width: 118, height: 58, badge: 'SP' },
-  ground: { label: 'Masse', defaultPins: 1, width: 112, height: 56, badge: 'GND' }
+  ecu: { label: 'ECU', defaultPins: 24, width: 158, height: 78, badge: 'ECU' },
+  connector: { label: 'Stecker', defaultPins: 12, width: 146, height: 72, badge: 'X' },
+  sensor: { label: 'Sensor', defaultPins: 4, width: 132, height: 64, badge: 'S' },
+  fuse: { label: 'Sicherung', defaultPins: 2, width: 126, height: 60, badge: 'F' },
+  splice: { label: 'Spleiß', defaultPins: 4, width: 120, height: 58, badge: 'SP' },
+  ground: { label: 'Massepunkt', defaultPins: 1, width: 118, height: 56, badge: 'GND' }
 };
 
 export const WIRE_COLORS = {
-  BK: '#111827',
-  RD: '#dc2626',
-  OG: '#f97316',
-  YE: '#eab308',
-  GN: '#16a34a',
-  BU: '#2563eb',
-  WH: '#f8fafc',
-  BN: '#92400e',
-  VT: '#7c3aed',
-  GY: '#64748b'
+  BK: { label: 'Schwarz', value: '#111827' },
+  RD: { label: 'Rot', value: '#dc2626' },
+  OG: { label: 'Orange', value: '#f97316' },
+  YE: { label: 'Gelb', value: '#eab308' },
+  GN: { label: 'Grün', value: '#16a34a' },
+  BU: { label: 'Blau', value: '#2563eb' },
+  WH: { label: 'Weiß', value: '#f8fafc' },
+  BN: { label: 'Braun', value: '#92400e' },
+  VT: { label: 'Violett', value: '#7c3aed' },
+  GY: { label: 'Grau', value: '#64748b' }
 };
 
 export const WIRE_GAUGES = ['0.35', '0.50', '0.75', '1.00', '1.50', '2.50', '4.00'];
@@ -45,21 +45,22 @@ export function createNewProject(overrides = {}) {
       author: AUTHOR,
       createdAt: now,
       updatedAt: now,
-      ...overrides.meta
+      ...normalizeObject(overrides.meta)
     },
-    components: overrides.components ? structuredCloneSafe(overrides.components) : [],
-    wires: overrides.wires ? structuredCloneSafe(overrides.wires) : []
+    components: Array.isArray(overrides.components) ? structuredCloneSafe(overrides.components) : [],
+    wires: Array.isArray(overrides.wires) ? structuredCloneSafe(overrides.wires) : []
   };
 }
 
 export function createComponent(type, x = 160, y = 140, sequence = 1) {
-  const config = COMPONENT_TYPES[type] ?? COMPONENT_TYPES.connector;
+  const safeType = COMPONENT_TYPES[type] ? type : 'connector';
+  const config = COMPONENT_TYPES[safeType];
   return {
-    id: uid(type),
-    type,
+    id: uid(safeType),
+    type: safeType,
     label: `${config.label} ${sequence}`,
-    x,
-    y,
+    x: Number(x) || 0,
+    y: Number(y) || 0,
     pins: config.defaultPins,
     partNumber: '',
     notes: ''
@@ -72,9 +73,9 @@ export function createWire(from, to, options = {}) {
     label: options.label ?? 'W-001',
     from: normalizeEndpoint(from),
     to: normalizeEndpoint(to),
-    gauge: options.gauge ?? '0.75',
-    color: options.color ?? 'OG',
-    lengthMm: Number(options.lengthMm ?? 0),
+    gauge: normalizeGauge(options.gauge),
+    color: normalizeColor(options.color),
+    lengthMm: Math.max(0, Number(options.lengthMm ?? 0) || 0),
     partNumber: options.partNumber ?? '',
     notes: options.notes ?? ''
   };
@@ -83,16 +84,26 @@ export function createWire(from, to, options = {}) {
 export function normalizeEndpoint(endpoint) {
   return {
     componentId: String(endpoint?.componentId ?? ''),
-    pin: Number(endpoint?.pin ?? 1)
+    pin: Math.max(1, Number(endpoint?.pin ?? 1) || 1)
   };
 }
 
+export function normalizeGauge(value) {
+  const gauge = String(value ?? '0.75');
+  return WIRE_GAUGES.includes(gauge) ? gauge : '0.75';
+}
+
+export function normalizeColor(value) {
+  const color = String(value ?? 'OG').toUpperCase();
+  return WIRE_COLORS[color] ? color : 'OG';
+}
+
 export function getComponent(project, id) {
-  return project.components.find(component => component.id === id) ?? null;
+  return project?.components?.find(component => component.id === id) ?? null;
 }
 
 export function getWire(project, id) {
-  return project.wires.find(wire => wire.id === id) ?? null;
+  return project?.wires?.find(wire => wire.id === id) ?? null;
 }
 
 export function getComponentGeometry(component) {
@@ -106,7 +117,7 @@ export function getComponentGeometry(component) {
 }
 
 export function endpointPoint(project, endpoint) {
-  const component = getComponent(project, endpoint.componentId);
+  const component = getComponent(project, endpoint?.componentId);
   if (!component) return null;
   const geometry = getComponentGeometry(component);
   return { x: geometry.centerX, y: geometry.centerY };
@@ -123,12 +134,54 @@ export function estimateWireLengthMm(project, wire) {
 }
 
 export function hydrateWireLengths(project) {
-  const next = structuredCloneSafe(project);
-  next.wires = next.wires.map(wire => ({
-    ...wire,
-    lengthMm: Number(wire.lengthMm) > 0 ? Number(wire.lengthMm) : estimateWireLengthMm(next, wire)
-  }));
+  const next = normalizeProject(project);
+  next.wires = next.wires.map(wire => {
+    const normalized = normalizeWire(wire);
+    const estimated = estimateWireLengthMm(next, normalized);
+    return {
+      ...normalized,
+      lengthMm: Number(normalized.lengthMm) > 0 ? Math.round(Number(normalized.lengthMm)) : estimated
+    };
+  });
   return next;
+}
+
+export function normalizeProject(project) {
+  const base = createNewProject({ meta: project?.meta ?? {} });
+  base.schemaVersion = Number(project?.schemaVersion ?? SCHEMA_VERSION) || SCHEMA_VERSION;
+  base.appName = project?.appName || APP_NAME;
+  base.components = Array.isArray(project?.components) ? project.components.map(normalizeComponent) : [];
+  base.wires = Array.isArray(project?.wires) ? project.wires.map(normalizeWire) : [];
+  return base;
+}
+
+export function normalizeComponent(component) {
+  const type = COMPONENT_TYPES[component?.type] ? component.type : 'connector';
+  const config = COMPONENT_TYPES[type];
+  return {
+    id: String(component?.id || uid(type)),
+    type,
+    label: String(component?.label || config.label),
+    x: Number(component?.x) || 0,
+    y: Number(component?.y) || 0,
+    pins: Math.max(1, Number(component?.pins ?? config.defaultPins) || config.defaultPins),
+    partNumber: String(component?.partNumber ?? ''),
+    notes: String(component?.notes ?? '')
+  };
+}
+
+export function normalizeWire(wire) {
+  return {
+    id: String(wire?.id || uid('wire')),
+    label: String(wire?.label || 'W-001'),
+    from: normalizeEndpoint(wire?.from),
+    to: normalizeEndpoint(wire?.to),
+    gauge: normalizeGauge(wire?.gauge),
+    color: normalizeColor(wire?.color),
+    lengthMm: Math.max(0, Number(wire?.lengthMm ?? 0) || 0),
+    partNumber: String(wire?.partNumber ?? ''),
+    notes: String(wire?.notes ?? '')
+  };
 }
 
 export function validateProject(project) {
@@ -138,45 +191,52 @@ export function validateProject(project) {
   const wireIds = new Set();
 
   if (!project || project.appName !== APP_NAME) {
-    warnings.push('Projekt wurde nicht als KabelWerkstatt-Datei erkannt. Import ist trotzdem möglich.');
+    warnings.push('Die Datei sieht nicht wie ein originales KabelWerkstatt-Projekt aus. Sie kann trotzdem geprüft werden.');
   }
 
   if (!Array.isArray(project?.components) || !Array.isArray(project?.wires)) {
-    errors.push('Projektstruktur ist ungültig: components und wires müssen Arrays sein.');
+    errors.push('Die Projektstruktur ist ungültig. Bauteile und Drähte müssen als Listen gespeichert sein.');
     return { ok: false, errors, warnings };
   }
 
   if (project.components.length === 0) {
-    warnings.push('Noch keine Bauteile vorhanden. Füge ECU, Stecker oder Sensoren hinzu.');
+    warnings.push('Noch keine Bauteile vorhanden. Lege zuerst ECU, Stecker oder Sensoren an.');
   }
 
-  for (const component of project.components) {
-    if (!component.id) errors.push(`Bauteil "${component.label ?? 'ohne Name'}" hat keine ID.`);
-    if (componentIds.has(component.id)) errors.push(`Doppelte Bauteil-ID gefunden: ${component.id}.`);
-    componentIds.add(component.id);
-    if (!COMPONENT_TYPES[component.type]) warnings.push(`Unbekannter Bauteiltyp: ${component.type}.`);
-    if (Number(component.pins) < 1) warnings.push(`${component.label ?? component.id} hat keine gültige Pinzahl.`);
+  for (const rawComponent of project.components) {
+    const component = normalizeComponent(rawComponent);
+    const id = String(rawComponent?.id ?? '');
+
+    if (!id) errors.push(`Bauteil „${component.label || 'ohne Name'}“ hat keine ID.`);
+    if (id && componentIds.has(id)) errors.push(`Doppelte Bauteil-ID gefunden: ${id}.`);
+    if (id) componentIds.add(id);
+    if (!COMPONENT_TYPES[rawComponent?.type]) warnings.push(`Unbekannter Bauteiltyp: ${rawComponent?.type ?? 'ohne Typ'}.`);
+    if (Number(rawComponent?.pins) < 1) warnings.push(`${component.label || id || 'Bauteil'} hat keine gültige Pinzahl.`);
   }
 
-  for (const wire of project.wires) {
-    if (!wire.id) errors.push(`Draht "${wire.label ?? 'ohne Name'}" hat keine ID.`);
-    if (wireIds.has(wire.id)) errors.push(`Doppelte Draht-ID gefunden: ${wire.id}.`);
-    wireIds.add(wire.id);
+  for (const rawWire of project.wires) {
+    const wire = normalizeWire(rawWire);
+    const id = String(rawWire?.id ?? '');
+    const fromId = String(rawWire?.from?.componentId ?? '');
+    const toId = String(rawWire?.to?.componentId ?? '');
 
-    const fromId = wire.from?.componentId;
-    const toId = wire.to?.componentId;
-    if (!componentIds.has(fromId)) errors.push(`${wire.label ?? wire.id}: Start-Bauteil fehlt.`);
-    if (!componentIds.has(toId)) errors.push(`${wire.label ?? wire.id}: Ziel-Bauteil fehlt.`);
-    if (fromId && toId && fromId === toId && Number(wire.from?.pin) === Number(wire.to?.pin)) {
-      warnings.push(`${wire.label ?? wire.id}: Start und Ziel sind identisch.`);
+    if (!id) errors.push(`Draht „${wire.label || 'ohne Name'}“ hat keine ID.`);
+    if (id && wireIds.has(id)) errors.push(`Doppelte Draht-ID gefunden: ${id}.`);
+    if (id) wireIds.add(id);
+    if (!componentIds.has(fromId)) errors.push(`${wire.label}: Start-Bauteil fehlt.`);
+    if (!componentIds.has(toId)) errors.push(`${wire.label}: Ziel-Bauteil fehlt.`);
+    if (fromId && toId && fromId === toId && Number(rawWire?.from?.pin) === Number(rawWire?.to?.pin)) {
+      warnings.push(`${wire.label}: Start und Ziel sind identisch.`);
     }
-    if (!WIRE_GAUGES.includes(String(wire.gauge))) warnings.push(`${wire.label ?? wire.id}: ungewöhnlicher Querschnitt ${wire.gauge} mm².`);
-    if (!WIRE_COLORS[String(wire.color)]) warnings.push(`${wire.label ?? wire.id}: unbekannter Farbcode ${wire.color}.`);
+    if (!WIRE_GAUGES.includes(String(rawWire?.gauge))) warnings.push(`${wire.label}: ungewöhnlicher Querschnitt ${rawWire?.gauge} mm².`);
+    if (!WIRE_COLORS[String(rawWire?.color ?? '').toUpperCase()]) warnings.push(`${wire.label}: unbekannter Farbcode ${rawWire?.color}.`);
   }
 
-  const connectedComponents = new Set(project.wires.flatMap(wire => [wire.from?.componentId, wire.to?.componentId]).filter(Boolean));
-  for (const component of project.components) {
-    if (!connectedComponents.has(component.id)) warnings.push(`${component.label ?? component.id} ist noch nicht verdrahtet.`);
+  const connectedComponents = new Set(project.wires.flatMap(wire => [wire?.from?.componentId, wire?.to?.componentId]).filter(Boolean).map(String));
+  for (const rawComponent of project.components) {
+    const component = normalizeComponent(rawComponent);
+    const id = String(rawComponent?.id ?? '');
+    if (id && !connectedComponents.has(id)) warnings.push(`${component.label || id} ist noch nicht verdrahtet.`);
   }
 
   return { ok: errors.length === 0, errors, warnings };
@@ -189,7 +249,7 @@ export function buildBom(project) {
 
   for (const component of hydrated.components) {
     const typeName = COMPONENT_TYPES[component.type]?.label ?? component.type;
-    const key = `${component.type}|${component.partNumber ?? ''}`;
+    const key = `${component.type}|${component.partNumber || ''}`;
     const current = componentRows.get(key) ?? {
       category: 'Bauteil',
       item: typeName,
@@ -202,10 +262,11 @@ export function buildBom(project) {
   }
 
   for (const wire of hydrated.wires) {
-    const key = `${wire.gauge}|${wire.color}|${wire.partNumber ?? ''}`;
+    const key = `${wire.gauge}|${wire.color}|${wire.partNumber || ''}`;
+    const colorName = WIRE_COLORS[wire.color]?.label ?? wire.color;
     const current = wireRows.get(key) ?? {
-      category: 'Draht',
-      item: `${wire.gauge} mm² ${wire.color}`,
+      category: 'Leitung',
+      item: `${wire.gauge} mm² · ${colorName}`,
       specification: wire.partNumber || 'Standardleitung',
       quantity: 0,
       lengthMm: 0
@@ -215,11 +276,14 @@ export function buildBom(project) {
     wireRows.set(key, current);
   }
 
-  return [...componentRows.values(), ...wireRows.values()].sort((a, b) => a.category.localeCompare(b.category) || a.item.localeCompare(b.item));
+  return [...componentRows.values(), ...wireRows.values()]
+    .sort((a, b) => a.category.localeCompare(b.category, 'de') || a.item.localeCompare(b.item, 'de'));
 }
 
 export function serializeProject(project) {
   const next = hydrateWireLengths(project);
+  next.schemaVersion = SCHEMA_VERSION;
+  next.appName = APP_NAME;
   next.meta = {
     ...next.meta,
     updatedAt: new Date().toISOString()
@@ -228,15 +292,19 @@ export function serializeProject(project) {
 }
 
 export function parseProjectJson(jsonText) {
-  const parsed = JSON.parse(jsonText);
-  const base = createNewProject({
-    meta: parsed.meta ?? {},
-    components: Array.isArray(parsed.components) ? parsed.components : [],
-    wires: Array.isArray(parsed.wires) ? parsed.wires : []
-  });
-  base.schemaVersion = Number(parsed.schemaVersion ?? SCHEMA_VERSION);
-  base.appName = parsed.appName ?? APP_NAME;
-  return hydrateWireLengths(base);
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    throw new Error('Die Datei ist kein gültiges JSON.');
+  }
+
+  if (!parsed || typeof parsed !== 'object') {
+    throw new Error('Die Datei enthält kein gültiges Projekt.');
+  }
+
+  const project = normalizeProject(parsed);
+  return hydrateWireLengths(project);
 }
 
 export function makeDemoProject() {
@@ -250,7 +318,7 @@ export function makeDemoProject() {
   });
 
   const ecu = createComponent('ecu', 110, 300, 1);
-  ecu.label = 'Zentral ECU';
+  ecu.label = 'Zentral-ECU';
   ecu.partNumber = 'KW-ECU-240';
 
   const fuse = createComponent('fuse', 360, 150, 1);
@@ -262,7 +330,7 @@ export function makeDemoProject() {
   connector.partNumber = 'KW-X12-OR';
 
   const sensor = createComponent('sensor', 920, 160, 1);
-  sensor.label = 'Temp Sensor';
+  sensor.label = 'Temperatursensor';
   sensor.partNumber = 'KW-SENS-T';
 
   const ground = createComponent('ground', 920, 470, 1);
@@ -287,4 +355,8 @@ export function makeDemoProject() {
 export function structuredCloneSafe(value) {
   if (typeof structuredClone === 'function') return structuredClone(value);
   return JSON.parse(JSON.stringify(value));
+}
+
+function normalizeObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 }

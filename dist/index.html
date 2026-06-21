@@ -5,41 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f97316" />
     <meta name="author" content="Amir Mobasheraghdam" />
-    <title>KabelWerkstatt — Wire Harness Design Tool</title>
+    <meta
+      name="description"
+      content="KabelWerkstatt hilft beim Zeichnen, Prüfen und Exportieren einfacher Kabelbaum-Entwürfe."
+    />
+    <title>KabelWerkstatt · Kabelbaum planen und prüfen</title>
     <link rel="icon" href="src/assets/logo.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="src/styles.css" />
   </head>
   <body>
     <header class="app-header">
-      <div class="brand">
-        <img src="src/assets/logo.svg" alt="KabelWerkstatt logo" />
-        <div>
-          <h1>KabelWerkstatt</h1>
-          <p>Orange Kabelbaum-Designer · Amir Mobasheraghdam</p>
-        </div>
-      </div>
+      <a class="brand" href="#" aria-label="KabelWerkstatt Startseite">
+        <img src="src/assets/logo.svg" alt="KabelWerkstatt Logo" />
+        <span>
+          <strong>KabelWerkstatt</strong>
+          <small>Kabelbäume ruhig planen, prüfen und dokumentieren.</small>
+        </span>
+      </a>
+
       <nav class="header-actions" aria-label="Projektaktionen">
-        <button id="newProjectButton" type="button">Neu</button>
-        <button id="loadDemoButton" type="button">Demo</button>
-        <button id="exportJsonButton" type="button">JSON Export</button>
-        <button id="importJsonButton" type="button">JSON Import</button>
-        <button id="exportSvgButton" type="button">SVG Export</button>
+        <button id="newProjectButton" type="button">Neues Projekt</button>
+        <button id="loadDemoButton" type="button">Demo laden</button>
+        <button id="exportJsonButton" type="button">Projekt speichern</button>
+        <button id="importJsonButton" type="button">Projekt öffnen</button>
+        <button id="exportSvgButton" type="button">SVG exportieren</button>
         <input id="importFileInput" type="file" accept="application/json,.json,.kwd.json" hidden />
       </nav>
     </header>
 
     <main class="app-shell">
-      <aside class="panel toolbox" aria-label="Werkzeuge">
+      <aside class="panel toolbox" aria-label="Werkzeugkasten">
         <section>
           <h2>Bauteile</h2>
+          <p class="hint">Füge Bauteile hinzu und ziehe sie anschließend auf der Arbeitsfläche an die richtige Stelle.</p>
           <div class="tool-grid">
             <button data-add-type="ecu" type="button">ECU</button>
             <button data-add-type="connector" type="button">Stecker</button>
             <button data-add-type="sensor" type="button">Sensor</button>
             <button data-add-type="fuse" type="button">Sicherung</button>
             <button data-add-type="splice" type="button">Spleiß</button>
-            <button data-add-type="ground" type="button">Masse</button>
+            <button data-add-type="ground" type="button">Massepunkt</button>
           </div>
         </section>
 
@@ -50,31 +56,35 @@
         </section>
 
         <section>
-          <h2>Projekt</h2>
+          <h2>Projektangaben</h2>
           <label>
-            Name
-            <input id="projectNameInput" type="text" />
+            Projektname
+            <input id="projectNameInput" type="text" autocomplete="off" />
           </label>
           <label>
-            Fahrzeug
-            <input id="vehicleInput" type="text" />
+            Fahrzeug oder Anlage
+            <input id="vehicleInput" type="text" autocomplete="off" />
           </label>
           <label>
             Revision
-            <input id="revisionInput" type="text" />
+            <input id="revisionInput" type="text" autocomplete="off" />
           </label>
           <label>
-            Autor
-            <input id="authorInput" type="text" />
+            Bearbeiter
+            <input id="authorInput" type="text" autocomplete="off" />
           </label>
         </section>
       </aside>
 
       <section class="workspace-card" aria-label="Arbeitsfläche">
         <div class="workspace-toolbar">
-          <strong id="projectTitle">Neuer Kabelsatz</strong>
-          <span id="statusText">Bereit</span>
+          <div>
+            <strong id="projectTitle">Neuer Kabelsatz</strong>
+            <span id="projectSubtitle">Bereit für den ersten Entwurf</span>
+          </div>
+          <output id="statusText" role="status" aria-live="polite">Bereit</output>
         </div>
+
         <svg id="workspace" class="workspace" viewBox="0 0 1280 760" role="img" aria-label="Kabelbaum Arbeitsfläche">
           <defs>
             <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -84,8 +94,8 @@
               <rect width="100" height="100" fill="url(#smallGrid)" />
               <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(120, 53, 15, 0.22)" stroke-width="1.5" />
             </pattern>
-            <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7c2d12" flood-opacity="0.18" />
+            <filter id="softShadow" x="-35%" y="-35%" width="170%" height="170%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7c2d12" flood-opacity="0.16" />
             </filter>
           </defs>
           <rect width="1280" height="760" fill="url(#grid)" />
@@ -112,7 +122,7 @@
 
     <footer class="app-footer">
       <span>© 2026 Amir Mobasheraghdam</span>
-      <span>KabelWerkstatt · Original Project · v1.0.0</span>
+      <span>KabelWerkstatt · Version 1.1.0 · Ohne externe Abhängigkeiten</span>
     </footer>
 
     <script type="module" src="src/app.js"></script>

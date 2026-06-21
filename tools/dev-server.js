@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { extname, join, normalize } from 'node:path';
+import { extname, join, normalize, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(fileURLToPath(new URL('..', import.meta.url)));
@@ -10,18 +10,20 @@ const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.json': 'application/json; charset=utf-8'
+  '.svg': 'image/svg+xml; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.ino': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8'
 };
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? '/', `http://localhost:${port}`);
-  const pathname = url.pathname === '/' ? '/index.html' : url.pathname;
+  const pathname = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
   const candidate = normalize(join(root, pathname));
 
-  if (!candidate.startsWith(root)) {
-    response.writeHead(403);
-    response.end('Forbidden');
+  if (relative(root, candidate).startsWith('..')) {
+    response.writeHead(403, { 'content-type': 'text/plain; charset=utf-8' });
+    response.end('Zugriff verweigert.');
     return;
   }
 
@@ -31,10 +33,10 @@ const server = createServer(async (request, response) => {
     response.end(data);
   } catch {
     response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
-    response.end('Not found');
+    response.end('Datei nicht gefunden.');
   }
 });
 
 server.listen(port, () => {
-  console.log(`KabelWerkstatt server running at http://localhost:${port}`);
+  console.log(`KabelWerkstatt läuft unter http://localhost:${port}`);
 });

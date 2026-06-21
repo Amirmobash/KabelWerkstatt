@@ -1,7 +1,7 @@
 {
   "name": "KabelWerkstatt",
   "short_name": "KabelWerkstatt",
-  "description": "Original orange wire harness design tool by Amir Mobasheraghdam.",
+  "description": "Ein klares Werkzeug für Kabelbaum-Entwurf, Stückliste, Prüfung und Export.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fff7ed",

@@ -1,4 +1,4 @@
-import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, rm, stat, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,21 +7,37 @@ const dist = join(root, 'dist');
 
 if (process.argv.includes('--clean')) {
   await rm(dist, { recursive: true, force: true });
-  console.log('dist/ removed');
+  console.log('dist/ wurde entfernt.');
   process.exit(0);
 }
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
-await cp(join(root, 'index.html'), join(dist, 'index.html'));
-await cp(join(root, 'manifest.json'), join(dist, 'manifest.json'));
-await cp(join(root, 'src'), join(dist, 'src'), { recursive: true });
-await cp(join(root, 'examples'), join(dist, 'examples'), { recursive: true });
+
+for (const entry of ['index.html', 'manifest.json', 'README.md', 'LICENSE']) {
+  await copyIfExists(entry);
+}
+
+for (const entry of ['src', 'examples', 'arduino']) {
+  await copyIfExists(entry, { recursive: true });
+}
+
 await writeFile(join(dist, 'build-info.json'), JSON.stringify({
   app: 'KabelWerkstatt',
   author: 'Amir Mobasheraghdam',
-  version: '1.0.0',
+  version: '1.1.0',
   builtAt: new Date().toISOString(),
-  note: 'Static build generated without external dependencies.'
+  note: 'Statischer Build ohne externe Abhängigkeiten.'
 }, null, 2));
-console.log('Build completed: dist/');
+
+console.log('Build abgeschlossen: dist/');
+
+async function copyIfExists(path, options = {}) {
+  const source = join(root, path);
+  try {
+    await stat(source);
+    await cp(source, join(dist, path), options);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}

@@ -26,6 +26,10 @@
   box-sizing: border-box;
 }
 
+html {
+  min-width: 320px;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -116,7 +120,7 @@ label {
   gap: 1rem;
   padding: 1rem 1.2rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(255, 247, 237, 0.76);
+  background: rgba(255, 247, 237, 0.78);
   backdrop-filter: blur(14px);
   position: sticky;
   top: 0;
@@ -127,6 +131,8 @@ label {
   display: flex;
   align-items: center;
   gap: 0.9rem;
+  color: inherit;
+  text-decoration: none;
 }
 
 .brand img {
@@ -134,13 +140,14 @@ label {
   height: 54px;
 }
 
-.brand h1 {
-  margin: 0;
+.brand strong {
+  display: block;
   letter-spacing: -0.04em;
   font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.05;
 }
 
-.brand p,
+.brand small,
 .app-footer {
   margin: 0.15rem 0 0;
   color: var(--muted);
@@ -157,7 +164,7 @@ label {
 
 .app-shell {
   display: grid;
-  grid-template-columns: 280px minmax(520px, 1fr) 340px;
+  grid-template-columns: 290px minmax(520px, 1fr) 350px;
   gap: 1rem;
   padding: 1rem;
 }
@@ -219,12 +226,18 @@ label {
 }
 
 .workspace-toolbar strong {
+  display: block;
   color: var(--orange-900);
 }
 
+.workspace-toolbar span,
 #statusText {
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+#statusText {
+  text-align: right;
 }
 
 .workspace {
@@ -234,6 +247,11 @@ label {
   display: block;
   touch-action: none;
   background: #fffaf4;
+}
+
+.component,
+.wire {
+  outline: none;
 }
 
 .component {
@@ -251,7 +269,8 @@ label {
   filter: url(#softShadow);
 }
 
-.component.selected .component-shell {
+.component.selected .component-shell,
+.component:focus-visible .component-shell {
   stroke: #111827;
   stroke-width: 3;
 }
@@ -302,7 +321,8 @@ label {
   cursor: pointer;
 }
 
-.wire.selected .wire-path:not(.shadow) {
+.wire.selected .wire-path:not(.shadow),
+.wire:focus-visible .wire-path:not(.shadow) {
   stroke: var(--orange-700);
   stroke-width: 8;
 }
@@ -388,7 +408,7 @@ label {
 
 @media (max-width: 1180px) {
   .app-shell {
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 270px 1fr;
   }
 
   .inspector {
@@ -403,6 +423,10 @@ label {
     flex-direction: column;
   }
 
+  .header-actions {
+    justify-content: flex-start;
+  }
+
   .app-shell {
     grid-template-columns: 1fr;
   }
@@ -413,5 +437,14 @@ label {
 
   .workspace {
     min-height: 460px;
+  }
+
+  .workspace-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #statusText {
+    text-align: left;
   }
 }
