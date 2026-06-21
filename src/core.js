@@ -1,5 +1,5 @@
 export const APP_NAME = 'KabelWerkstatt';
-export const AUTHOR = 'Amir Mobasheraghdam';
+export const AUTHOR = 'Amir Mobahseraghdam';
 export const SCHEMA_VERSION = 2;
 export const PIXEL_TO_MM = 4;
 
